@@ -1,0 +1,10 @@
+tensorflow
+tensorboardX
+ftfy==5.1
+tqdm
+pandas
+ipython
+torch >= 1.0
+spacy
+flask
+flask-restx
