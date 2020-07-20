@@ -1,0 +1,33 @@
+plugins {
+  id "org.openapi.generator" version "4.3.1"
+  id 'com.palantir.docker' version '0.25.0'
+}
+
+version = '0.1'
+
+task clean(type: Delete) {
+    delete "$buildDir"
+    delete "$rootDir/client"
+}
+
+task buildPythonClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    dependsOn clean
+    generatorName = "python"
+    inputSpec = "$rootDir/openapi-specs/pepper_comet.json".toString()
+    outputDir = "$rootDir/client".toString()
+    configOptions = [
+        projectName: "pepper_comet",
+        packageName: "pepper_comet"
+    ]
+}
+
+docker {
+    dependsOn clean
+    name "cltl/pepper_comet:${project.version}"
+    files fileTree("$rootDir") {
+        include "rest"
+        include "requirements.txt"
+    }
+}
+
+defaultTasks 'buildPythonClient', 'docker'
